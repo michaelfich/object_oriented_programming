@@ -36,3 +36,14 @@ christina.greeting
 
 chris.teach
 christina.learn
+
+christina.teach # => results in an error when running the program
+
+=begin
+Unable to run the 'teach' method on the object 'christina' because it is an
+instance of the Student class
+
+The .teach() method is only accessible through instances of the Teacher class,
+rather than within the parent class Person, as not all instances of Person will
+perform the task of teaching.
+=end
