@@ -33,3 +33,6 @@ chris.greeting
 
 christina = Student.new("Christina")
 christina.greeting
+
+chris.teach
+christina.learn
