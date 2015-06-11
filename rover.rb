@@ -3,8 +3,8 @@ class Rover
   def initialize(input)
     input = input.split
 
-    @x = input[0]
-    @y = input[1]
+    @x = input[0].to_i
+    @y = input[1].to_i
     @direction = ['N', 'E', 'S', 'W']
 
     direction = input[2]
@@ -19,23 +19,41 @@ class Rover
   end
 
   def read_instruction(instruction)
-    instruction = instruction.chars
+    instructions = instruction.chars
+
+    instructions.each do |i|
+      if i == 'M'
+        move
+      elsif i == 'R'
+        turn(true)
+      elsif i == 'L'
+        turn(false)
+      end
+    end
   end
 
   def turn(direction)
-    if direction == 'R'
-      @direction.rotate
-    elsif direction == 'L'
-      @direction.rotate!(-1)
+    direction ? @direction.rotate : @direction.rotate!(-1)
+  end
+
+  def move
+    if @direction[0] == 'N'
+      @y += 1
+    elsif @direction[0] == 'E'
+      @x += 1
+    elsif @direction[0] == 'S'
+      @y -= 1
+    elsif @direction[0] == 'W'
+      @x -= 1
     end
   end
 
   def to_s
-    "Position: (#{@x}, #{@y})\nDirection: #{@direction[0]}"
+    "#{@x} #{@y} #{@direction[0]}"
   end
 end
 
-input1 = "1 2 W"
+input1 = "1 2 N"
 instructions1 = "LMLMLMLMM"
 
 puts "Enter the first line of input:"
@@ -50,3 +68,5 @@ puts instructions1
 
 rover = Rover.new(input1)
 rover.read_instruction(instructions1)
+
+puts rover
