@@ -33,7 +33,7 @@ class Rover
   end
 
   def turn(direction)
-    direction ? @direction.rotate : @direction.rotate!(-1)
+    direction ? @direction.rotate! : @direction.rotate!(-1)
   end
 
   def move
@@ -53,20 +53,14 @@ class Rover
   end
 end
 
-input1 = "1 2 N"
-instructions1 = "LMLMLMLMM"
+rover1 = Rover.new("1 2 N")
+rover1.read_instruction("LMLMLMLMM")
 
-puts "Enter the first line of input:"
-print ">> "
-puts input1
-# input1 = gets.chomp
+print "Final position and direction of 'rover1': "
+puts rover1
 
-puts "Enter the second line of input:"
-print ">> "
-puts instructions1
-# instructions1 = gets.chomp
+rover2 = Rover.new("3 3 E")
+rover2.read_instruction("MMRMMRMRRM")
 
-rover = Rover.new(input1)
-rover.read_instruction(instructions1)
-
-puts rover
+print "Final position and direction of 'rover2': "
+puts rover2
