@@ -1,11 +1,14 @@
 # Rover
 class Rover
-  def initialize(input)
+  attr_reader :x, :y
+
+  def initialize(input, plateau=nil)
     input = input.split
 
     @x = input[0].to_i
     @y = input[1].to_i
     @direction = ['N', 'E', 'S', 'W']
+    @plateau = plateau
 
     direction = input[2]
 
@@ -38,13 +41,21 @@ class Rover
 
   def move
     if @direction[0] == 'N'
-      @y += 1
+      if @plateau.can_move?(self, "N")
+        @y += 1
+      end
     elsif @direction[0] == 'E'
-      @x += 1
+      if @plateau.can_move?(self, "E")
+        @x += 1
+      end
     elsif @direction[0] == 'S'
-      @y -= 1
+      if @plateau.can_move?(self, "S")
+        @y -= 1
+      end
     elsif @direction[0] == 'W'
-      @x -= 1
+      if @plateau.can_move?(self, "W")
+        @x -= 1
+      end
     end
   end
 
@@ -53,14 +64,43 @@ class Rover
   end
 end
 
-rover1 = Rover.new("1 2 N")
+# Plateau
+class Plateau
+  attr_reader :x, :y
+
+  def initialize(platform)
+    platform = platform.split
+
+    @x = platform[0].to_i
+    @y = platform[1].to_i
+  end
+
+  def can_move?(rover, direction)
+    if direction == "N"
+      return true unless rover.y == @y
+    elsif direction == "E"
+      return true unless rover.x == @x
+    elsif direction == "S"
+      return true unless rover.y == 0
+    elsif direction == "W"
+      return true unless rover.x == 0
+    else
+      return false
+    end
+  end
+end
+
+plateau = Plateau.new("5 5")
+
+rover1 = Rover.new("1 2 N", plateau)
 rover1.read_instruction("LMLMLMLMM")
 
-print "Final position and direction of 'rover1': "
-puts rover1
-
-rover2 = Rover.new("3 3 E")
+rover2 = Rover.new("3 3 E", plateau)
 rover2.read_instruction("MMRMMRMRRM")
 
-print "Final position and direction of 'rover2': "
-puts rover2
+rover3 = Rover.new("4 3 E", plateau)
+rover3.read_instruction("MMMMM")
+
+puts "Final position and direction of 'rover1': #{rover1}"
+puts "Final position and direction of 'rover2': #{rover2}"
+puts "Final position and direction of 'rover3': #{rover3}"
