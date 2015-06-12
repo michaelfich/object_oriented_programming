@@ -19,6 +19,8 @@ class Rover
     elsif direction == 'W'
       @direction.rotate!(-1)
     end
+
+    plateau.add_rover(self)
   end
 
   def read_instruction(instruction)
@@ -67,26 +69,52 @@ end
 # Plateau
 class Plateau
   attr_reader :x, :y
+  attr_accessor :rovers
 
   def initialize(platform)
     platform = platform.split
 
     @x = platform[0].to_i
     @y = platform[1].to_i
+
+    @rovers = []
+  end
+
+  def add_rover(rover)
+    @rovers << rover
   end
 
   def can_move?(rover, direction)
     if direction == "N"
-      return true unless rover.y == @y
+      return true if rover.y != @y && !collide?(rover, direction)
     elsif direction == "E"
-      return true unless rover.x == @x
+      return true if rover.x != @x && !collide?(rover, direction)
     elsif direction == "S"
-      return true unless rover.y == 0
+      return true if rover.y != 0 && !collide?(rover, direction)
     elsif direction == "W"
-      return true unless rover.x == 0
+      return true if rover.x != 0 && !collide?(rover, direction)
     else
       return false
     end
+  end
+
+  # return if the move wil cause a collision with another rover
+  def collide?(rover, direction=nil)
+    @rovers.each do |r|
+      break if rover.equal?(r)
+
+      if direction == "N"
+        return true if r.x == rover.x && r.y == (rover.y + 1)
+      elsif direction == "E"
+        return true if r.x == (rover.x + 1) && r.y = rover.y
+      elsif direction == "S"
+        return true if r.x == rover.x && r.y == (rover.y - 1)
+      elsif direction == "W"
+        return true if r.x == (rover.x - 1) && r.y == rover.y
+      end
+    end
+
+    return false
   end
 end
 
@@ -99,8 +127,12 @@ rover2 = Rover.new("3 3 E", plateau)
 rover2.read_instruction("MMRMMRMRRM")
 
 rover3 = Rover.new("4 3 E", plateau)
-rover3.read_instruction("MMMMM")
+rover3.read_instruction("RLRLRL")
 
-puts "Final position and direction of 'rover1': #{rover1}"
-puts "Final position and direction of 'rover2': #{rover2}"
-puts "Final position and direction of 'rover3': #{rover3}"
+rover4 = Rover.new("1 5 S", plateau)
+rover4.read_instruction("MMMMM")
+
+
+plateau.rovers.each do |rovers|
+  puts rovers
+end
