@@ -2,21 +2,14 @@
 class Rover
   attr_reader :x, :y
 
-  def initialize(input, plateau=nil)
+  def initialize(input, plateau)
     input = input.split
 
     @x = input[0].to_i
     @y = input[1].to_i
-    @direction = ['N', 'E', 'S', 'W']
-
     @plateau = plateau
-    if plateau.collide?(self)
-      puts "(#{@x}, #{@y} is already occupied by another rover"
-      return nil
-    else
-      plateau.add_rover(self)
-    end
 
+    @direction = ['N', 'E', 'S', 'W']
     direction = input[2]
 
     if direction == 'E'
@@ -25,6 +18,18 @@ class Rover
       @direction.rotate!(2)
     elsif direction == 'W'
       @direction.rotate!(-1)
+    end
+
+    # checks to see if a rover is already present at the initial coordinates
+    if plateau.collide?(self)
+      puts "(#{@x}, #{@y}) is occupied by another rover"
+      return nil
+    # checks to see if the rover is within the range of the plateau
+    elsif !plateau.within_range?(self)
+      puts "(#{@x}, #{@y}) is not on the plateau"
+      return nil
+    else
+      plateau.add_rover(self)
     end
   end
 
@@ -123,22 +128,35 @@ class Plateau
 
     false
   end
+
+  # returns true if rover can be placed on a valid set of x & y coordinates
+  def within_range?(rover)
+    return false if rover.x > @x || rover.y > @y
+
+    true
+  end
 end
 
 plateau = Plateau.new("5 5")
 
 rover1 = Rover.new("1 2 N", plateau)
 rover1.read_instruction("LMLMLMLMM")
+puts rover1
 
 rover2 = Rover.new("3 3 E", plateau)
 rover2.read_instruction("MMRMMRMRRM")
+puts rover2
 
 rover3 = Rover.new("4 3 E", plateau)
 rover3.read_instruction("RLRLRMMRM")
+puts rover3
 
 rover4 = Rover.new("1 5 S", plateau)
 rover4.read_instruction("MMMMMRRM")
+puts rover4
 
-plateau.rovers.each do |rovers|
-  puts rovers
-end
+rover5 = Rover.new("1 5 N", plateau)
+
+rover6 = Rover.new("6 3 W", plateau)
+
+rover7 = Rover.new("2 8 S", plateau)
