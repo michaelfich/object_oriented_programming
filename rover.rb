@@ -141,19 +141,19 @@ plateau = Plateau.new("5 5")
 
 rover1 = Rover.new("1 2 N", plateau)
 rover1.read_instruction("LMLMLMLMM")
-puts rover1
 
 rover2 = Rover.new("3 3 E", plateau)
 rover2.read_instruction("MMRMMRMRRM")
-puts rover2
 
 rover3 = Rover.new("4 3 E", plateau)
 rover3.read_instruction("RLRLRMMRM")
-puts rover3
 
 rover4 = Rover.new("1 5 S", plateau)
 rover4.read_instruction("MMMMMRRM")
-puts rover4
+
+plateau.rovers.each do |rovers|
+  puts rovers
+end
 
 rover5 = Rover.new("1 5 N", plateau)
 
