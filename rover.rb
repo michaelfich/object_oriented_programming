@@ -8,7 +8,14 @@ class Rover
     @x = input[0].to_i
     @y = input[1].to_i
     @direction = ['N', 'E', 'S', 'W']
+
     @plateau = plateau
+    if plateau.collide?(self)
+      puts "(#{@x}, #{@y} is already occupied by another rover"
+      return nil
+    else
+      plateau.add_rover(self)
+    end
 
     direction = input[2]
 
@@ -19,8 +26,6 @@ class Rover
     elsif direction == 'W'
       @direction.rotate!(-1)
     end
-
-    plateau.add_rover(self)
   end
 
   def read_instruction(instruction)
@@ -98,7 +103,7 @@ class Plateau
     end
   end
 
-  # return if the move wil cause a collision with another rover
+  # return true if the move wil cause a collision with another rover
   def collide?(rover, direction=nil)
     @rovers.each do |r|
       break if rover.equal?(r)
@@ -106,15 +111,17 @@ class Plateau
       if direction == "N"
         return true if r.x == rover.x && r.y == (rover.y + 1)
       elsif direction == "E"
-        return true if r.x == (rover.x + 1) && r.y = rover.y
+        return true if r.x == (rover.x + 1) && r.y == rover.y
       elsif direction == "S"
         return true if r.x == rover.x && r.y == (rover.y - 1)
       elsif direction == "W"
         return true if r.x == (rover.x - 1) && r.y == rover.y
+      elsif direction == nil
+        return true if r.x == rover.x && r.y == rover.y
       end
     end
 
-    return false
+    false
   end
 end
 
@@ -127,11 +134,10 @@ rover2 = Rover.new("3 3 E", plateau)
 rover2.read_instruction("MMRMMRMRRM")
 
 rover3 = Rover.new("4 3 E", plateau)
-rover3.read_instruction("RLRLRL")
+rover3.read_instruction("RLRLRMMRM")
 
 rover4 = Rover.new("1 5 S", plateau)
-rover4.read_instruction("MMMMM")
-
+rover4.read_instruction("MMMMMRRM")
 
 plateau.rovers.each do |rovers|
   puts rovers
